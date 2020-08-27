@@ -1,0 +1,87 @@
+#container {
+  text-align: center;
+
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+
+  color: #8c8c8c;
+
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+body {
+  cursor: url('http://ionicframework.com/img/finger.png'), auto;
+}
+
+.fixed-header {
+  margin-top: 43px;
+  /* 
+   The ionic header bar is 43px in height,
+   put your content below the header bar.
+  */
+}
+
+.platform-webview.platform-ios.platform-cordova .fixed-header {
+  margin-top: 63px;
+  /* On iOS, moving a div out of ion-content,
+  I think you need to compensation for the 20px system status bar.
+  so it's 43px+20px=63px. but I'm not so sure, it hasn't been tested.
+  Test it yourself and make modifications if needed.
+  */
+}
+
+// .my-map {
+//   height: 200px;
+//   width: 100%;
+//   position: absolute;
+//   background: grey;
+//   color: red;
+//   text-align: center;
+//   padding: 20px;
+// }
+
+.my-map {
+  text-align: center;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ion-list-places {
+  margin-top: 200px !important;
+}
+
+.platform-webview.platform-ios.platform-cordova .ion-list-places {
+  margin-top: 220px;
+  /*
+  Same as .fixed-header
+  */
+}
+
+google-map {
+  position: relative;
+}
+
+// ion-list {
+//   position: relative;
+// }

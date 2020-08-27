@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Google Map
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+  <google-map slot="fixed" height="300px" width="100%" [zoom]="zoom" [center]="center" [options]="options">
+    <map-marker #markerElem="mapMarker" *ngIf="marker" [position]="marker.position" [label]="marker.label"
+      [title]="marker.title" [options]="marker.options" (mapClick)="openInfo(markerElem, marker.info)">
+      <map-info-window>{{ infoContent }}</map-info-window>
+    </map-marker>
+  </google-map>
+
+  <!-- <br>
+
+  <ion-list>
+    <ion-item *ngFor="let place of places">
+      <ion-button (click)="addClickedMarker(place)">{{ place.nome }}</ion-button>
+    </ion-item>
+  </ion-list> -->
+
+  <!-- <ul>
+    <li *ngFor="let place of places" [ngStyle]="{'list-style-type': 'none'}">
+      <button (click)="addClickedMarker(place)">{{ place.nome }}</button>
+    </li>
+  </ul> -->
+</ion-content>
+
+<br>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let place of places">
+      <ion-button (click)="addClickedMarker(place)">{{ place.nome }}</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
