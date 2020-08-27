@@ -39,23 +39,11 @@ export class LeafletComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
 
-    this.map = L.map("map").setView([this.places[0].lat, this.places[0].lng], 16);
-
-    L.tileLayer(
-      "https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=IFcmcZTAOhTyMN9zBNpU",
-      {
-        attribution:
-          '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
-        maxZoom: 18,
-        tileSize: 256,
-      }
-    ).addTo(this.map);
+    this.addMapAndTileLayer();
 
     const latLng: L.LatLngExpression = [this.places[0].lat, this.places[0].lng];
     this.addMarker(this.places[0], latLng);
     this.addPopupToMarker(this.places[0], latLng, this.marker);
-
-    // .addTo(this.map);
 
     // correção de bug para baixar todos os tiles abertos no map atual
     setTimeout(() => {this.map.invalidateSize()}, 1000);
@@ -67,6 +55,28 @@ export class LeafletComponent implements AfterViewInit, OnInit {
     this.addMarker(place, newLatLng);
     this.addPopupToMarker(place, newLatLng, this.marker);
     console.log(this.placesService.getPlace(id));
+  }
+
+  addMapAndTileLayer() {
+    if(!this.map) {
+      this.map = L.map("map").setView(
+        [this.places[0].lat, this.places[0].lng],
+        16
+      );
+    }
+    if(!this.map.hasLayer()) {
+      L.tileLayer(
+        "https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=IFcmcZTAOhTyMN9zBNpU",
+        {
+          attribution:
+            '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+          maxZoom: 18,
+          tileSize: 256,
+        }
+      ).addTo(this.map);
+    } else {
+      console.log("Already has a map and layer.")
+    }
   }
 
   addMarker(place: Place, latLng: L.LatLngExpression) {
@@ -83,10 +93,10 @@ export class LeafletComponent implements AfterViewInit, OnInit {
 
   addPopupToMarker(place: Place, latLng: L.LatLngExpression, marker: Marker) {
     this.popup = L.popup()
-      .setLatLng(latLng)
       .setContent('<p><strong>' + place.nome + '</strong><br />' + place.endereco + '</p>');
+      // .setLatLng(latLng)
       // .openOn(this.map);
 
-    this.marker.bindPopup();
+    this.marker.bindPopup(this.popup).openPopup();
   }
 }
