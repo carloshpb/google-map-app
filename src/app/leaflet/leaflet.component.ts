@@ -38,33 +38,36 @@ export class LeafletComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-
     this.addMapAndTileLayer();
-
-    const latLng: L.LatLngExpression = [this.places[0].lat, this.places[0].lng];
-    this.addMarker(this.places[0], latLng);
-    this.addPopupToMarker(this.places[0], latLng, this.marker);
+    setTimeout(() => {
+      const latLng: L.LatLng = L.latLng(this.places[0].lat, this.places[0].lng);
+      this.addMarker(this.places[0], latLng);
+      this.addPopupToMarker(this.places[0], latLng, this.marker);
+    }, 2000)
+    
 
     // correção de bug para baixar todos os tiles abertos no map atual
-    setTimeout(() => {this.map.invalidateSize()}, 1000);
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 1000);
   }
 
   addClickedMarker(id: number) {
     const place = this.placesService.getPlace(id);
-    const newLatLng = new L.LatLng(place.lat, place.lng);
+    const newLatLng = L.latLng(place.lat, place.lng);
     this.addMarker(place, newLatLng);
     this.addPopupToMarker(place, newLatLng, this.marker);
     console.log(this.placesService.getPlace(id));
   }
 
   addMapAndTileLayer() {
-    if(!this.map) {
+    if (!this.map) {
       this.map = L.map("map").setView(
         [this.places[0].lat, this.places[0].lng],
         16
       );
     }
-    if(!this.map.hasLayer()) {
+    if (!this.map.hasLayer()) {
       L.tileLayer(
         "https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=IFcmcZTAOhTyMN9zBNpU",
         {
@@ -75,27 +78,33 @@ export class LeafletComponent implements AfterViewInit, OnInit {
         }
       ).addTo(this.map);
     } else {
-      console.log("Already has a map and layer.")
+      console.log("Already has a map and layer.");
     }
   }
 
-  addMarker(place: Place, latLng: L.LatLngExpression) {
-    if(!this.marker) {
+  addMarker(place: Place, latLng: L.LatLng) {
+    if (!this.marker) {
       this.marker = L.marker(latLng);
       this.marker.addTo(this.map);
     }
+    
     this.map.panTo(latLng, {
       animate: true,
-      duration: 0.6
+      duration: 0.6,
     });
+
+    this.map.setView(latLng, 16);
     this.marker.setLatLng(latLng);
   }
 
-  addPopupToMarker(place: Place, latLng: L.LatLngExpression, marker: Marker) {
-    this.popup = L.popup()
-      .setContent('<p><strong>' + place.nome + '</strong><br />' + place.endereco + '</p>');
-      // .setLatLng(latLng)
-      // .openOn(this.map);
+  addPopupToMarker(place: Place, latLng: L.LatLng, marker: Marker) {
+    this.popup = L.popup().setContent(
+      "<p><strong>" + place.nome + "</strong><br />" + place.endereco + "</p>"
+    );
+    // .setLatLng(latLng)
+    // .openOn(this.map);
+
+    // setTimeout(() => {this.marker.bindPopup(this.popup).openPopup();}, 1000);
 
     this.marker.bindPopup(this.popup).openPopup();
   }
