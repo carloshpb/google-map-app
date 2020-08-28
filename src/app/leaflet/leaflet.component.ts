@@ -4,6 +4,7 @@ import { PlacesService } from '../services/places.service';
 import { Place } from '../models/place.model'
 import { latLng, Marker } from 'leaflet';
 
+// Configurações padrões para fazer o marker aparecer na versão mobile
 const iconRetinaUrl = "assets/marker-icon-2x.png";
 const iconUrl = "assets/marker-icon.png";
 const shadowUrl = "assets/marker-shadow.png";
@@ -39,6 +40,8 @@ export class LeafletComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.addMapAndTileLayer();
+
+    // Timeout para esperar o load inicial dos tiles do map, antes de colocar o marker e o popup
     setTimeout(() => {
       const latLng: L.LatLng = L.latLng(this.places[0].lat, this.places[0].lng);
       this.addMarker(this.places[0], latLng);
@@ -52,6 +55,7 @@ export class LeafletComponent implements AfterViewInit, OnInit {
     }, 1000);
   }
 
+  // Mudar o marker para o local clicado da lista
   addClickedMarker(id: number) {
     const place = this.placesService.getPlace(id);
     const newLatLng = L.latLng(place.lat, place.lng);
@@ -60,6 +64,7 @@ export class LeafletComponent implements AfterViewInit, OnInit {
     console.log(this.placesService.getPlace(id));
   }
 
+  // Inicia o map e o tileLayer dele, caso não tenha sido já iniciado
   addMapAndTileLayer() {
     if (!this.map) {
       this.map = L.map("map").setView(
@@ -82,6 +87,7 @@ export class LeafletComponent implements AfterViewInit, OnInit {
     }
   }
 
+  // Cria o marker (caso não tenha sido criado) e muda sua posição e dados conforme o lugar escolhido
   addMarker(place: Place, latLng: L.LatLng) {
     if (!this.marker) {
       this.marker = L.marker(latLng);
@@ -97,14 +103,11 @@ export class LeafletComponent implements AfterViewInit, OnInit {
     this.marker.setLatLng(latLng);
   }
 
+  // Adiciona o popup com o nome e endereço do lugar, e já abre ele imediatamente
   addPopupToMarker(place: Place, latLng: L.LatLng, marker: Marker) {
     this.popup = L.popup().setContent(
       "<p><strong>" + place.nome + "</strong><br />" + place.endereco + "</p>"
     );
-    // .setLatLng(latLng)
-    // .openOn(this.map);
-
-    // setTimeout(() => {this.marker.bindPopup(this.popup).openPopup();}, 1000);
 
     this.marker.bindPopup(this.popup).openPopup();
   }
